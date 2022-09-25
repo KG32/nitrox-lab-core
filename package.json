@@ -2,7 +2,7 @@
   "name": "nitrox-lab-core",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/KG32/nitrox-lab-core/issues"
   },
-  "homepage": "https://github.com/KG32/nitrox-lab-core#readme"
+  "homepage": "https://github.com/KG32/nitrox-lab-core#readme",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
 }
