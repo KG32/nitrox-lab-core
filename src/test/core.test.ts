@@ -11,16 +11,31 @@ describe('Core', () => {
 });
 
 describe('Calculations', () => {
-    it.skip('Should calculate MOD', () => {
-        // tuple [EAN, MOD]
-        const modCases: [number, number][] = [
-            [32, 33.8],
-            [36, 28.9]
+
+    it('Should calculate MOD', () => {
+        // tuple [pO2, MOD]
+        const modCasesDefault: [number, number][] = [
+            [0.32, 33.75],
+            [0.36, 28.89]
         ];
+        modCasesDefault.forEach(modCase => {
+            const [caseEan, caseMOD] = modCase;
+            const result = nx.calcMOD(caseEan);
+            assert.strictEqual(result, caseMOD);
+        });
+    });
 
-        modCases.forEach(modCase => {
-            const [caseEan, caseMod] = modCase;
+    it('Should throw on incorrect depth range', () => {
+        const eanValues = [0, -32, -321, -0];
+        eanValues.forEach(ean => {
+            assert.throws(() => nx.calcMOD(ean), 'Incorrect depth range');
+        });
+    });
 
+    it('Should throw on incorrect ppO2Max range', () => {
+        const ppO2MaxValues = [0, 0.3, 0.453, -3, -0, -0.12];
+        ppO2MaxValues.forEach(ppO2Max => {
+            assert.throws(() => nx.calcMOD(32, ppO2Max), 'Incorrect ppO2Max');
         });
     });
 });
