@@ -22,8 +22,8 @@ class NitroxLabCore {
 
         const ppO2Max = customPPO2Max !== undefined ? customPPO2Max : this.ppO2Max;
 
-        const mod = (((ppO2Max * 10) / pO2) - 10).toFixed(2);
-        return Number(mod);
+        const mod = (((ppO2Max * 10) / pO2) - 10);
+        return Number(mod.toFixed(2));
     }
 
     get units() {
