@@ -1,26 +1,37 @@
 import { assert } from 'chai';
 
-import nx from '../index';
+import nx, { UNITS_DEPTH } from '../index';
 
 describe('Core', () => {
     it('Should get units', () => {
         const units = nx.units;
         assert.isObject(units);
-        assert.property(units, 'pressure');
+        assert.hasAllKeys(units, ['pressure', 'depth']);
     });
 });
 
 describe('Calculations', () => {
-
-    it('Should calculate MOD', () => {
+    it('Should calculate MOD metric', () => {
         // tuple [pO2, MOD]
-        const modCasesDefault: [number, number][] = [
+        const modCasesMetric: [number, number][] = [
             [0.32, 33.75],
             [0.36, 28.89]
         ];
-        modCasesDefault.forEach(modCase => {
+        modCasesMetric.forEach(modCase => {
             const [caseEan, caseMOD] = modCase;
             const result = nx.calcMOD(caseEan);
+            assert.strictEqual(result, caseMOD);
+        });
+    });
+
+    it('Should calculate MOD imperial', () => {
+        const modCasesImperial: [number, number][] = [
+            [0.32, 110.73],
+            [0.36, 94.79]
+        ];
+        modCasesImperial.forEach(modCase => {
+            const [caseEan, caseMOD] = modCase;
+            const result = nx.calcMOD(caseEan, { unitsDepth: UNITS_DEPTH.FT });
             assert.strictEqual(result, caseMOD);
         });
     });
@@ -35,7 +46,7 @@ describe('Calculations', () => {
     it('Should throw on incorrect ppO2Max range', () => {
         const ppO2MaxValues = [0, 0.3, 0.453, -3, -0, -0.12];
         ppO2MaxValues.forEach(ppO2Max => {
-            assert.throws(() => nx.calcMOD(32, ppO2Max), 'Incorrect ppO2Max');
+            assert.throws(() => nx.calcMOD(32, { ppO2Max }), 'Incorrect ppO2Max');
         });
     });
 });
