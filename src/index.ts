@@ -9,7 +9,6 @@ export enum UNITS_DEPTH {
 }
 
 interface CalcModOptions {
-    ppO2Max?: number;
     unitsDepth?: UNITS_DEPTH;
 }
 
@@ -28,12 +27,12 @@ class NitroxLabCore {
         return meters * 3.281;
     }
 
-    calcMOD(pO2: number, options?: CalcModOptions): number {
+    calcMOD(pO2: number, ppO2Max: number, options?: CalcModOptions): number {
         if (!(pO2 > 0)) {
             throw new Error('Incorrect depth range');
         }
 
-        const { ppO2Max = this.defaultppO2Max, unitsDepth = this.unitsDepth } = options || {};
+        const { unitsDepth = this.unitsDepth } = options || {};
         if (ppO2Max !== undefined && !(ppO2Max >= 1)) {
             throw new Error('Incorrect ppO2Max');
         }

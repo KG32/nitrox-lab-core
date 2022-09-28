@@ -19,7 +19,7 @@ describe('Calculations', () => {
         ];
         modCasesMetric.forEach(modCase => {
             const [caseEan, caseMOD] = modCase;
-            const result = nx.calcMOD(caseEan);
+            const result = nx.calcMOD(caseEan, 1.4);
             assert.strictEqual(result, caseMOD);
         });
     });
@@ -31,7 +31,7 @@ describe('Calculations', () => {
         ];
         modCasesImperial.forEach(modCase => {
             const [caseEan, caseMOD] = modCase;
-            const result = nx.calcMOD(caseEan, { unitsDepth: UNITS_DEPTH.FT });
+            const result = nx.calcMOD(caseEan, 1.4, { unitsDepth: UNITS_DEPTH.FT });
             assert.strictEqual(result, caseMOD);
         });
     });
@@ -39,14 +39,14 @@ describe('Calculations', () => {
     it('Should throw on incorrect depth range', () => {
         const eanValues = [0, -32, -321, -0];
         eanValues.forEach(ean => {
-            assert.throws(() => nx.calcMOD(ean), 'Incorrect depth range');
+            assert.throws(() => nx.calcMOD(ean, 1.4), 'Incorrect depth range');
         });
     });
 
     it('Should throw on incorrect ppO2Max range', () => {
         const ppO2MaxValues = [0, 0.3, 0.453, -3, -0, -0.12];
         ppO2MaxValues.forEach(ppO2Max => {
-            assert.throws(() => nx.calcMOD(32, { ppO2Max }), 'Incorrect ppO2Max');
+            assert.throws(() => nx.calcMOD(32, ppO2Max), 'Incorrect ppO2Max');
         });
     });
 });
