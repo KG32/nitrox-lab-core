@@ -12,26 +12,26 @@ describe('Core', () => {
 
 describe('Calculations', () => {
     it('Should calculate MOD metric', () => {
-        // tuple [pO2, MOD]
-        const modCasesMetric: [number, number][] = [
-            [0.32, 33.75],
-            [0.36, 28.89]
+        // tuple [pO2, ppO2Max, MOD]
+        const modCasesMetric: [number, number, number][] = [
+            [0.32, 1.4, 33.75],
+            [0.36, 1.4, 28.89]
         ];
         modCasesMetric.forEach(modCase => {
-            const [caseEan, caseMOD] = modCase;
-            const result = nx.calcMOD(caseEan, 1.4);
+            const [caseEan, casePpO2Max, caseMOD] = modCase;
+            const result = nx.calcMOD(caseEan, casePpO2Max);
             assert.strictEqual(result, caseMOD);
         });
     });
 
     it('Should calculate MOD imperial', () => {
-        const modCasesImperial: [number, number][] = [
-            [0.32, 110.73],
-            [0.36, 94.79]
+        const modCasesImperial: [number, number, number][] = [
+            [0.32, 1.4, 110.73],
+            [0.36, 1.4, 94.79]
         ];
         modCasesImperial.forEach(modCase => {
-            const [caseEan, caseMOD] = modCase;
-            const result = nx.calcMOD(caseEan, 1.4, { unitsDepth: UNITS_DEPTH.FT });
+            const [caseEan, casePpO2Max, caseMOD] = modCase;
+            const result = nx.calcMOD(caseEan, casePpO2Max, { unitsDepth: UNITS_DEPTH.FT });
             assert.strictEqual(result, caseMOD);
         });
     });
