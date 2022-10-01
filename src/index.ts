@@ -12,6 +12,10 @@ interface CalcModOptions {
     unitsDepth?: UNITS_DEPTH;
 }
 
+interface CalcBestMixOptions {
+    unitsDepth?: UNITS_DEPTH;
+}
+
 class NitroxLabCore {
     unitsPressure: UNITS_PRESSURE;
     unitsDepth: UNITS_DEPTH;
@@ -27,6 +31,10 @@ class NitroxLabCore {
         return meters * 3.281;
     }
 
+    roundNum(num: number, digits: number): number {
+        return Math.floor( num * Math.pow(10, digits) ) / Math.pow(10, digits);
+    }
+
     calcMOD(pO2: number, ppO2Max: number, options?: CalcModOptions): number {
         if (!(pO2 > 0)) {
             throw new Error('Incorrect depth range');
@@ -37,11 +45,17 @@ class NitroxLabCore {
             throw new Error('Incorrect ppO2Max');
         }
 
-        let mod = Number((((ppO2Max * 10) / pO2) - 10).toFixed(2));
+        let mod = ((ppO2Max * 10) / pO2) - 10;
         if (unitsDepth === UNITS_DEPTH.FT) {
-            mod = Number(this.convMetersToFeet(mod).toFixed(2));
+            mod = this.convMetersToFeet(mod);
         }
-        return mod;
+        return this.roundNum(mod, 2);
+    }
+
+    calcBestMix(depth: number, ppO2Max: number, options?: CalcBestMixOptions): number {
+        const bestMix = ppO2Max / ((depth / 10) + 1);
+
+        return this.roundNum(bestMix, 2);
     }
 
     get units() {
