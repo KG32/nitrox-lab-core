@@ -1,1 +1,0 @@
-import nx from './index';
