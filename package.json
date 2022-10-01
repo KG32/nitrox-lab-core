@@ -2,12 +2,13 @@
   "name": "nitrox-lab-core",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": ["./lib"],
   "scripts": {
     "build": "tsc",
-    "test": "tsc && mocha dist/test",
-    "tmp": "tsc && node dist/tmp.js"
+    "test": "tsc && mocha lib/test",
+    "tmp": "tsc && node lib/tmp.js"
   },
   "repository": {
     "type": "git",
