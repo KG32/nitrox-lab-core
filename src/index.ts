@@ -39,14 +39,14 @@ class NitroxLabCore {
         return Math.floor( num * Math.pow(10, digits) ) / Math.pow(10, digits);
     }
 
-    calcMOD(pO2: number, ppO2Max: number): number {
-        if (!(pO2 > 0)) {
+    calcMOD(fO2: number, ppO2Max: number): number {
+        if (!(fO2 > 0)) {
             throw new Error('Incorrect depth range');
         }
         if (!(ppO2Max > 1)) {
             throw new Error('Incorrect ppO2Max');
         }
-        let mod = ((ppO2Max * 10) / pO2) - 10;
+        let mod = ((ppO2Max * 10) / fO2) - 10;
         if (this.unitsDepth === UNITS_DEPTH.FT) {
             mod = this.convDepth(mod, UNITS_DEPTH.FT);
         }
