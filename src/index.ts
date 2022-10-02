@@ -1,11 +1,11 @@
 export enum UNITS_PRESSURE {
-    BAR = 'BAR',
-    PSI = 'PSI'
+    BAR = 'bar',
+    PSI = 'psi'
 };
 
 export enum UNITS_DEPTH {
-    M = 'M',
-    FT = 'FT'
+    M = 'm',
+    FT = 'ft'
 }
 
 interface CoreOptions {
@@ -26,8 +26,13 @@ class NitroxLabCore {
         this.defaultPpO2Max = defaultPpO2Max ? defaultPpO2Max : 1.4;
     }
 
-    convMetersToFeet(meters: number): number {
-        return meters * 3.281;
+    convDepth(depth: number, target: UNITS_DEPTH): number {
+        const factor = 3.281;
+        if (target === UNITS_DEPTH.FT) {
+            return depth * factor;
+        } else {
+            return depth / factor;
+        }
     }
 
     roundNum(num: number, digits: number): number {
@@ -38,21 +43,22 @@ class NitroxLabCore {
         if (!(pO2 > 0)) {
             throw new Error('Incorrect depth range');
         }
-
-        if (ppO2Max !== undefined && !(ppO2Max >= 1)) {
+        if (!(ppO2Max > 1)) {
             throw new Error('Incorrect ppO2Max');
         }
-
         let mod = ((ppO2Max * 10) / pO2) - 10;
         if (this.unitsDepth === UNITS_DEPTH.FT) {
-            mod = this.convMetersToFeet(mod);
+            mod = this.convDepth(mod, UNITS_DEPTH.FT);
         }
         return this.roundNum(mod, 2);
     }
 
     calcBestMix(depth: number, ppO2Max: number): number {
-        const bestMix = ppO2Max / ((depth / 10) + 1);
-
+        let d = depth;
+        if (this.unitsDepth === UNITS_DEPTH.FT) {
+            d = this.convDepth(d, UNITS_DEPTH.M);
+        }
+        const bestMix = ppO2Max / ((d / 10) + 1);
         return this.roundNum(bestMix, 2);
     }
 

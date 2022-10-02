@@ -57,9 +57,9 @@ describe('Calculations', () => {
         it('Should throw on incorrect ppO2Max range', () => {
             const nx = new NitroxLabCore();
 
-            const ppO2MaxValues = [0, 0.3, 0.453, -3, -0, -0.12];
+            const ppO2MaxValues = [0, 0.3, 0.453, -3, -0, -0.12, null, undefined];
             ppO2MaxValues.forEach(ppO2Max => {
-                assert.throws(() => nx.calcMOD(32, ppO2Max), 'Incorrect ppO2Max');
+                assert.throws(() => nx.calcMOD(32, ppO2Max as number), 'Incorrect ppO2Max');
             });
         });
 
@@ -74,6 +74,18 @@ describe('Calculations', () => {
                 [33, 1.4, 0.32]
             ];
             bestMixCasesMetric.forEach(bestMixCase => {
+                const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
+                const bestMix = nx.calcBestMix(caseDepth, casePPO2Max);
+                assert.strictEqual(bestMix, caseBestMix);
+            });
+        });
+
+        it('Should calculate best mix imperial', () => {
+            const nx = new NitroxLabCore({ unitsDepth: UNITS_DEPTH.FT });
+            const bestMixCasesImperial: [number, number, number][] = [
+                [110, 1.4, 0.32]
+            ];
+            bestMixCasesImperial.forEach(bestMixCase => {
                 const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
                 const bestMix = nx.calcBestMix(caseDepth, casePPO2Max);
                 assert.strictEqual(bestMix, caseBestMix);
