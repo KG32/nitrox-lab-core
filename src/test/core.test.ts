@@ -1,9 +1,10 @@
 import { assert } from 'chai';
 
-import nx, { UNITS_DEPTH } from '../index';
+import { NitroxLabCore, UNITS_DEPTH} from '../index';
 
 describe('Core', () => {
     it('Should get units', () => {
+        const nx = new NitroxLabCore();
         const units = nx.units;
         assert.isObject(units);
         assert.hasAllKeys(units, ['pressure', 'depth']);
@@ -13,6 +14,7 @@ describe('Core', () => {
 describe('Calculations', () => {
 
     describe('Maximum operating depth', () => {
+        const nx = new NitroxLabCore();
 
         it('Should calculate MOD metric', () => {
             // tuple [pO2, ppO2Max, MOD]
@@ -56,6 +58,8 @@ describe('Calculations', () => {
     });
 
     describe('Best mix', () => {
+        const nx = new NitroxLabCore();
+
         it('Should calculate best mix metric', () => {
             const bestMixCasesMetric: [number, number, number][] = [
                 [33, 1.4, 0.32]

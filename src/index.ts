@@ -8,6 +8,12 @@ export enum UNITS_DEPTH {
     FT = 'FT'
 }
 
+interface CoreOptions {
+    unitsPressure?: UNITS_PRESSURE;
+    unitsDepth?: UNITS_DEPTH;
+    defaultPpO2Max?: number;
+}
+
 interface CalcModOptions {
     unitsDepth?: UNITS_DEPTH;
 }
@@ -19,12 +25,13 @@ interface CalcBestMixOptions {
 class NitroxLabCore {
     unitsPressure: UNITS_PRESSURE;
     unitsDepth: UNITS_DEPTH;
-    defaultppO2Max: number;
+    defaultPpO2Max: number;
 
-    constructor() {
-        this.unitsPressure = UNITS_PRESSURE.BAR;
-        this.unitsDepth = UNITS_DEPTH.M;
-        this.defaultppO2Max = 1.4;
+    constructor(options?: CoreOptions) {
+        const { unitsPressure, unitsDepth, defaultPpO2Max } = options || {};
+        this.unitsPressure = unitsPressure ? unitsPressure : UNITS_PRESSURE.BAR;
+        this.unitsDepth = unitsDepth ? unitsDepth : UNITS_DEPTH.M;
+        this.defaultPpO2Max = defaultPpO2Max ? defaultPpO2Max : 1.4;
     }
 
     convMetersToFeet(meters: number): number {
@@ -66,4 +73,4 @@ class NitroxLabCore {
     }
 }
 
-export default new NitroxLabCore();
+export { NitroxLabCore };
