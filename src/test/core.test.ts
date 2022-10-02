@@ -2,6 +2,13 @@ import { assert } from 'chai';
 
 import { NitroxLabCore, UNITS_DEPTH} from '../index';
 
+interface TopOffCase {
+    currentMix: { fO2: number, p: number };
+    topOffMix: { fO2: number };
+    targetPressure: number;
+    resultFO2: number;
+}
+
 describe('Core', () => {
     it('Should get units', () => {
         const nx = new NitroxLabCore();
@@ -89,6 +96,27 @@ describe('Calculations', () => {
                 const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
                 const bestMix = nx.calcBestMix(caseDepth, casePPO2Max);
                 assert.strictEqual(bestMix, caseBestMix);
+            });
+        });
+    });
+
+    describe.only('Gas mixing', () => {
+        describe('Top off', () => {
+            it('Should calculate top off result BAR', () => {
+                const nx = new NitroxLabCore();
+                const topOffCases: TopOffCase[] = [
+                    {
+                        currentMix: { fO2: 0.32, p: 100 },
+                        topOffMix: { fO2: 0.21 },
+                        targetPressure: 200,
+                        resultFO2: 0.275
+                    }
+                ];
+                topOffCases.forEach(topOffCase => {
+                    const { currentMix, topOffMix, targetPressure, resultFO2 } = topOffCase;
+                    const result = nx.calcTopOff({ currentMix, topOffMix, targetPressure });
+                    assert.strictEqual(result, resultFO2);
+                });
             });
         });
     });

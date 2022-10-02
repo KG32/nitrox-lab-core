@@ -8,6 +8,12 @@ export enum UNITS_DEPTH {
     FT = 'ft'
 }
 
+interface TopOffOptions {
+    currentMix: { fO2: number, p: number };
+    topOffMix: { fO2: number };
+    targetPressure: number;
+}
+
 interface CoreOptions {
     unitsPressure?: UNITS_PRESSURE;
     unitsDepth?: UNITS_DEPTH;
@@ -60,6 +66,16 @@ class NitroxLabCore {
         }
         const bestMix = ppO2Max / ((d / 10) + 1);
         return this.roundNum(bestMix, 2);
+    }
+
+    calcTopOff(options: TopOffOptions): number {
+        const { currentMix, topOffMix, targetPressure } = options;
+        const currentO2P = currentMix.fO2 * currentMix.p;
+        const topOffO2P = topOffMix.fO2 * (targetPressure - currentMix.p);
+        const endO2P = currentO2P + topOffO2P;
+        const endFO2 = endO2P / targetPressure;
+
+        return endFO2;
     }
 
     get units() {
