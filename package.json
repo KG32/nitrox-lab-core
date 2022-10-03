@@ -1,6 +1,6 @@
 {
   "name": "nitrox-lab-core",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
   "files": [
