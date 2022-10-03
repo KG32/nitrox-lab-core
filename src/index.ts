@@ -41,8 +41,9 @@ class NitroxLabCore {
         }
     }
 
-    roundNum(num: number, digits: number): number {
-        return Math.floor( num * Math.pow(10, digits) ) / Math.pow(10, digits);
+    numFixed(num: number, digits: number, mode: 'floor' | 'ceil'): number {
+        const pwr = Math.pow(10, digits);
+        return Math[mode](num * pwr) / pwr;
     }
 
     calcMOD(fO2: number, ppO2Max: number): number {
@@ -56,7 +57,7 @@ class NitroxLabCore {
         if (this.unitsDepth === UNITS_DEPTH.FT) {
             mod = this.convDepth(mod, UNITS_DEPTH.FT);
         }
-        return this.roundNum(mod, 2);
+        return this.numFixed(mod, 2, 'floor');
     }
 
     calcBestMix(depth: number, ppO2Max: number): number {
@@ -65,7 +66,7 @@ class NitroxLabCore {
             d = this.convDepth(d, UNITS_DEPTH.M);
         }
         const bestMix = ppO2Max / ((d / 10) + 1);
-        return this.roundNum(bestMix, 2);
+        return this.numFixed(bestMix, 2, 'floor');
     }
 
     calcTopOff(options: TopOffOptions): number {
@@ -75,7 +76,7 @@ class NitroxLabCore {
         const endO2P = currentO2P + topOffO2P;
         const endFO2 = endO2P / targetPressure;
 
-        return endFO2;
+        return this.numFixed(endFO2, 3, 'ceil');
     }
 
     get units() {

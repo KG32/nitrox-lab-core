@@ -100,7 +100,7 @@ describe('Calculations', () => {
         });
     });
 
-    describe.only('Gas mixing', () => {
+    describe('Gas mixing', () => {
         describe('Top off', () => {
             it('Should calculate top off result BAR', () => {
                 const nx = new NitroxLabCore();
@@ -109,7 +109,13 @@ describe('Calculations', () => {
                         currentMix: { fO2: 0.32, p: 100 },
                         topOffMix: { fO2: 0.21 },
                         targetPressure: 200,
-                        resultFO2: 0.275
+                        resultFO2: 0.265
+                    },
+                    {
+                        currentMix: { fO2: 0.21, p: 50 },
+                        topOffMix: { fO2: 0.32 },
+                        targetPressure: 210,
+                        resultFO2: 0.294
                     }
                 ];
                 topOffCases.forEach(topOffCase => {
