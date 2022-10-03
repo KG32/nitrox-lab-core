@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { NitroxLabCore, UNITS_DEPTH} from '../index';
+import { NitroxLabCore, Units} from '../index';
 
 interface TopOffCase {
     currentMix: { fO2: number, p: number };
@@ -9,20 +9,8 @@ interface TopOffCase {
     resultFO2: number;
 }
 
-describe('Core', () => {
-    it('Should get units', () => {
-        const nx = new NitroxLabCore();
-        const units = nx.units;
-        assert.isObject(units);
-        assert.hasAllKeys(units, ['pressure', 'depth']);
-    });
-});
-
 describe('Calculations', () => {
-
     describe('Maximum operating depth', () => {
-
-
         it('Should calculate MOD metric', () => {
             const nx = new NitroxLabCore();
 
@@ -37,9 +25,8 @@ describe('Calculations', () => {
                 assert.strictEqual(result, caseMOD);
             });
         });
-
         it('Should calculate MOD imperial', () => {
-            const nx = new NitroxLabCore({ unitsDepth: UNITS_DEPTH.FT });
+            const nx = new NitroxLabCore({ units: Units.IMPERIAL });
 
             const modCasesImperial: [number, number, number][] = [
                 [0.32, 1.4, 110.73],
@@ -51,7 +38,6 @@ describe('Calculations', () => {
                 assert.strictEqual(result, caseMOD);
             });
         });
-
         it('Should throw on incorrect depth range', () => {
             const nx = new NitroxLabCore();
 
@@ -60,7 +46,6 @@ describe('Calculations', () => {
                 assert.throws(() => nx.calcMOD(ean, 1.4), 'Incorrect depth range');
             });
         });
-
         it('Should throw on incorrect ppO2Max range', () => {
             const nx = new NitroxLabCore();
 
@@ -69,11 +54,9 @@ describe('Calculations', () => {
                 assert.throws(() => nx.calcMOD(32, ppO2Max as number), 'Incorrect ppO2Max');
             });
         });
-
     });
 
     describe('Best mix', () => {
-
         it('Should calculate best mix metric', () => {
             const nx = new NitroxLabCore();
 
@@ -86,9 +69,8 @@ describe('Calculations', () => {
                 assert.strictEqual(bestMix, caseBestMix);
             });
         });
-
         it('Should calculate best mix imperial', () => {
-            const nx = new NitroxLabCore({ unitsDepth: UNITS_DEPTH.FT });
+            const nx = new NitroxLabCore({ units: Units.IMPERIAL });
             const bestMixCasesImperial: [number, number, number][] = [
                 [110, 1.4, 0.32]
             ];
@@ -104,6 +86,28 @@ describe('Calculations', () => {
         describe('Top off', () => {
             it('Should calculate top off result BAR', () => {
                 const nx = new NitroxLabCore();
+                const topOffCases: TopOffCase[] = [
+                    {
+                        currentMix: { fO2: 0.32, p: 100 },
+                        topOffMix: { fO2: 0.21 },
+                        targetPressure: 200,
+                        resultFO2: 0.265
+                    },
+                    {
+                        currentMix: { fO2: 0.21, p: 50 },
+                        topOffMix: { fO2: 0.32 },
+                        targetPressure: 210,
+                        resultFO2: 0.294
+                    }
+                ];
+                topOffCases.forEach(topOffCase => {
+                    const { currentMix, topOffMix, targetPressure, resultFO2 } = topOffCase;
+                    const result = nx.calcTopOff({ currentMix, topOffMix, targetPressure });
+                    assert.strictEqual(result, resultFO2);
+                });
+            });
+            it('Should calculate top off result PSI', () => {
+                const nx = new NitroxLabCore({ units: Units.IMPERIAL });
                 const topOffCases: TopOffCase[] = [
                     {
                         currentMix: { fO2: 0.32, p: 100 },

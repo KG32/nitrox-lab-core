@@ -1,11 +1,6 @@
-export enum UNITS_PRESSURE {
-    BAR = 'bar',
-    PSI = 'psi'
-};
-
-export enum UNITS_DEPTH {
-    M = 'm',
-    FT = 'ft'
+export enum Units {
+    METRIC = 'metric',
+    IMPERIAL = 'imperial'
 }
 
 interface TopOffOptions {
@@ -15,26 +10,23 @@ interface TopOffOptions {
 }
 
 interface CoreOptions {
-    unitsPressure?: UNITS_PRESSURE;
-    unitsDepth?: UNITS_DEPTH;
+    units?: Units;
     defaultPpO2Max?: number;
 }
 
 class NitroxLabCore {
-    unitsPressure: UNITS_PRESSURE;
-    unitsDepth: UNITS_DEPTH;
+    units: Units;
     defaultPpO2Max: number;
 
     constructor(options?: CoreOptions) {
-        const { unitsPressure, unitsDepth, defaultPpO2Max } = options || {};
-        this.unitsPressure = unitsPressure ? unitsPressure : UNITS_PRESSURE.BAR;
-        this.unitsDepth = unitsDepth ? unitsDepth : UNITS_DEPTH.M;
+        const { units, defaultPpO2Max } = options || {};
+        this.units = units ? units : Units.METRIC;
         this.defaultPpO2Max = defaultPpO2Max ? defaultPpO2Max : 1.4;
     }
 
-    convDepth(depth: number, target: UNITS_DEPTH): number {
+    convDepth(depth: number, target: Units): number {
         const factor = 3.281;
-        if (target === UNITS_DEPTH.FT) {
+        if (target === Units.IMPERIAL) {
             return depth * factor;
         } else {
             return depth / factor;
@@ -54,16 +46,16 @@ class NitroxLabCore {
             throw new Error('Incorrect ppO2Max');
         }
         let mod = ((ppO2Max * 10) / fO2) - 10;
-        if (this.unitsDepth === UNITS_DEPTH.FT) {
-            mod = this.convDepth(mod, UNITS_DEPTH.FT);
+        if (this.units === Units.IMPERIAL) {
+            mod = this.convDepth(mod, Units.IMPERIAL);
         }
         return this.numFixed(mod, 2, 'floor');
     }
 
     calcBestMix(depth: number, ppO2Max: number): number {
         let d = depth;
-        if (this.unitsDepth === UNITS_DEPTH.FT) {
-            d = this.convDepth(d, UNITS_DEPTH.M);
+        if (this.units === Units.IMPERIAL) {
+            d = this.convDepth(d, Units.METRIC);
         }
         const bestMix = ppO2Max / ((d / 10) + 1);
         return this.numFixed(bestMix, 2, 'floor');
@@ -77,13 +69,6 @@ class NitroxLabCore {
         const endFO2 = endO2P / targetPressure;
 
         return this.numFixed(endFO2, 3, 'ceil');
-    }
-
-    get units() {
-        return {
-            pressure: this.unitsPressure,
-            depth: this.unitsDepth
-        }
     }
 }
 
