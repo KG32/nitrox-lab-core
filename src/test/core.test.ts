@@ -16,8 +16,8 @@ describe('Calculations', () => {
 
             // tuple [pO2, ppO2Max, MOD]
             const modCasesMetric: [number, number, number][] = [
-                [32, 1.4, 33.75],
-                [36, 1.4, 28.88]
+                [0.32, 1.4, 33.75],
+                [0.36, 1.4, 28.88]
             ];
             modCasesMetric.forEach(modCase => {
                 const [caseEan, casePpO2Max, caseMOD] = modCase;
@@ -29,8 +29,8 @@ describe('Calculations', () => {
             const nx = new NitroxLabCore({ units: Units.IMPERIAL });
 
             const modCasesImperial: [number, number, number][] = [
-                [32, 1.4, 110.73],
-                [36, 1.4, 94.78]
+                [0.32, 1.4, 110.73],
+                [0.36, 1.4, 94.78]
             ];
             modCasesImperial.forEach(modCase => {
                 const [caseEan, casePpO2Max, caseMOD] = modCase;
@@ -38,12 +38,12 @@ describe('Calculations', () => {
                 assert.strictEqual(result, caseMOD);
             });
         });
-        it('Should throw on incorrect EANx range', () => {
+        it('Should throw on incorrect depth range', () => {
             const nx = new NitroxLabCore();
 
             const eanValues = [0, -32, -321, -0];
             eanValues.forEach(ean => {
-                assert.throws(() => nx.calcMOD(ean, 1.4), 'Incorrect EANx range');
+                assert.throws(() => nx.calcMOD(ean, 1.4), 'Incorrect depth range');
             });
         });
         it('Should throw on incorrect ppO2Max range', () => {

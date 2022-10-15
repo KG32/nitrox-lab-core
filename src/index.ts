@@ -38,14 +38,14 @@ class NitroxLabCore {
         return Math[mode](num * pwr) / pwr;
     }
 
-    calcMOD(eanx: number, ppO2Max: number): number {
-        if (!(eanx > 0 && eanx <= 100)) {
-            throw new Error('Incorrect EANx range');
+    calcMOD(fO2: number, ppO2Max: number): number {
+        if (!(fO2 > 0)) {
+            throw new Error('Incorrect depth range');
         }
         if (!(ppO2Max > 1)) {
             throw new Error('Incorrect ppO2Max');
         }
-        let mod = ((ppO2Max * 10) / (eanx / 100) ) - 10;
+        let mod = ((ppO2Max * 10) / fO2) - 10;
         if (this.units === Units.IMPERIAL) {
             mod = this.convDepth(mod, Units.IMPERIAL);
         }
