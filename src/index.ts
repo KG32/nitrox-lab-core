@@ -57,8 +57,8 @@ class NitroxLabCore {
         if (this.units === Units.IMPERIAL) {
             d = this.convDepth(d, Units.METRIC);
         }
-        const bestMix = ppO2Max / ((d / 10) + 1);
-        return this.numFixed(bestMix, 2, 'floor');
+        const bestMix = (ppO2Max / ((d / 10) + 1)) * 100;
+        return this.numFixed(bestMix, 0, 'floor');
     }
 
     calcTopOff(mixes: TopOffOptions): number {

@@ -61,7 +61,7 @@ describe('Calculations', () => {
             const nx = new NitroxLabCore();
 
             const bestMixCasesMetric: [number, number, number][] = [
-                [33, 1.4, 0.32]
+                [33, 1.4, 32]
             ];
             bestMixCasesMetric.forEach(bestMixCase => {
                 const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
@@ -72,7 +72,7 @@ describe('Calculations', () => {
         it('Should calculate best mix imperial', () => {
             const nx = new NitroxLabCore({ units: Units.IMPERIAL });
             const bestMixCasesImperial: [number, number, number][] = [
-                [110, 1.4, 0.32]
+                [110, 1.4, 32]
             ];
             bestMixCasesImperial.forEach(bestMixCase => {
                 const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
