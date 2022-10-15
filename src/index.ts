@@ -61,8 +61,8 @@ class NitroxLabCore {
         return this.numFixed(bestMix, 2, 'floor');
     }
 
-    calcTopOff(mixes: TopOffOptions): number {
-        const { currentMix, topOffMix, targetPressure } = mixes;
+    calcTopOff(options: TopOffOptions): number {
+        const { currentMix, topOffMix, targetPressure } = options;
         const currentO2P = currentMix.fO2 * currentMix.p;
         const topOffO2P = topOffMix.fO2 * (targetPressure - currentMix.p);
         const endO2P = currentO2P + topOffO2P;
