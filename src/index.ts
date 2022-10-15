@@ -40,7 +40,7 @@ class NitroxLabCore {
 
     calcMOD(fO2: number, ppO2Max: number): number {
         if (!(fO2 > 0)) {
-            throw new Error('Incorrect depth range');
+            throw new Error('Incorrect fO2 range');
         }
         if (!(ppO2Max > 1)) {
             throw new Error('Incorrect ppO2Max');

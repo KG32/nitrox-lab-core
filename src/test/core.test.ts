@@ -38,12 +38,12 @@ describe('Calculations', () => {
                 assert.strictEqual(result, caseMOD);
             });
         });
-        it('Should throw on incorrect depth range', () => {
+        it('Should throw on incorrect fO2 range', () => {
             const nx = new NitroxLabCore();
 
             const eanValues = [0, -32, -321, -0];
-            eanValues.forEach(ean => {
-                assert.throws(() => nx.calcMOD(ean, 1.4), 'Incorrect depth range');
+            eanValues.forEach(fO2 => {
+                assert.throws(() => nx.calcMOD(fO2, 1.4), 'Incorrect fO2 range');
             });
         });
         it('Should throw on incorrect ppO2Max range', () => {
