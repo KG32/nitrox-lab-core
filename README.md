@@ -1,5 +1,8 @@
 # nitrox-lab-core
 
+![npm](https://img.shields.io/npm/v/nitrox-lab-core)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/KG32/nitrox-lab-core/Node.js%20CI?label=tests)
+
 ## Usage
 
 ```bash
