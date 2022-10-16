@@ -1,24 +1,5 @@
-export enum Units {
-    METRIC = 'metric',
-    IMPERIAL = 'imperial'
-}
-
-interface TopOffOptions {
-    currentMix: { fO2: number, p: number };
-    topOffMix: { fO2: number };
-    targetPressure: number;
-}
-
-interface CoreOptions {
-    units?: Units;
-    defaultPpO2Max?: number;
-}
-
-enum InputType {
-    DEPTH,
-    PPO2MAX,
-    FO2
-}
+import { Units, CoreOptions, InputType, TopOffOptions } from "./types";
+import { validateInput } from "./validation";
 
 class NitroxLabCore {
     units: Units;
@@ -40,25 +21,7 @@ class NitroxLabCore {
     }
 
     private validateInput(value: any, type: InputType): void | Error {
-        switch(type) {
-            case InputType.DEPTH:
-                if (!(typeof value === 'number' && value > 0)) {
-                    throw new Error('Incorrect depth');
-                }
-                break;
-            case InputType.FO2:
-                if (!(typeof value === 'number' && value > 0)) {
-                    throw new Error('Incorrect fO2');
-                }
-                break;
-            case InputType.PPO2MAX:
-                if (!(typeof value === 'number' && value > 0)) {
-                    throw new Error('Incorrect ppO2Max');
-                }
-                break;
-            default:
-                throw new Error('Unknown input validation type');
-        }
+        validateInput(value, type);
     }
 
     private numFixed(num: number, digits: number, mode: 'floor' | 'ceil'): number {
