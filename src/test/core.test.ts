@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 
-import { NitroxLabCore, Units} from '../index';
+import { NitroxLabCore } from '../index';
+import { Units } from '../types';
 
 interface TopOffCase {
     currentMix: { fO2: number, p: number };
