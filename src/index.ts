@@ -14,6 +14,12 @@ interface CoreOptions {
     defaultPpO2Max?: number;
 }
 
+enum InputType {
+    DEPTH,
+    PPO2MAX,
+    FO2
+}
+
 class NitroxLabCore {
     units: Units;
     defaultPpO2Max: number;
@@ -24,7 +30,7 @@ class NitroxLabCore {
         this.defaultPpO2Max = defaultPpO2Max ? defaultPpO2Max : 1.4;
     }
 
-    convDepth(depth: number, target: Units): number {
+    private convDepth(depth: number, target: Units): number {
         const factor = 3.281;
         if (target === Units.IMPERIAL) {
             return depth * factor;
@@ -33,18 +39,36 @@ class NitroxLabCore {
         }
     }
 
-    numFixed(num: number, digits: number, mode: 'floor' | 'ceil'): number {
+    private validateInput(value: any, type: InputType): void | Error {
+        switch(type) {
+            case InputType.DEPTH:
+                if (!(typeof value === 'number' && value > 0)) {
+                    throw new Error('Incorrect depth');
+                }
+                break;
+            case InputType.FO2:
+                if (!(typeof value === 'number' && value > 0)) {
+                    throw new Error('Incorrect fO2');
+                }
+                break;
+            case InputType.PPO2MAX:
+                if (!(typeof value === 'number' && value > 0)) {
+                    throw new Error('Incorrect ppO2Max');
+                }
+                break;
+            default:
+                throw new Error('Unknown input validation type');
+        }
+    }
+
+    private numFixed(num: number, digits: number, mode: 'floor' | 'ceil'): number {
         const pwr = Math.pow(10, digits);
         return Math[mode](num * pwr) / pwr;
     }
 
     calcMOD(fO2: number, ppO2Max: number): number {
-        if (!(fO2 > 0)) {
-            throw new Error('Incorrect fO2 range');
-        }
-        if (!(ppO2Max > 1)) {
-            throw new Error('Incorrect ppO2Max');
-        }
+        this.validateInput(fO2, InputType.FO2);
+        this.validateInput(ppO2Max, InputType.PPO2MAX);
         let mod = ((ppO2Max * 10) / fO2) - 10;
         if (this.units === Units.IMPERIAL) {
             mod = this.convDepth(mod, Units.IMPERIAL);
@@ -53,11 +77,16 @@ class NitroxLabCore {
     }
 
     calcBestMix(depth: number, ppO2Max: number): number {
+        this.validateInput(depth, InputType.DEPTH);
+        this.validateInput(ppO2Max, InputType.PPO2MAX);
         let d = depth;
         if (this.units === Units.IMPERIAL) {
             d = this.convDepth(d, Units.METRIC);
         }
-        const bestMix = ppO2Max / ((d / 10) + 1);
+        let bestMix = ppO2Max / ((d / 10) + 1);
+        if (bestMix > 1) {
+            bestMix = 1;
+        }
         return this.numFixed(bestMix, 2, 'floor');
     }
 

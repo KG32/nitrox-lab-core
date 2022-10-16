@@ -13,8 +13,7 @@ describe('Calculations', () => {
     describe('Maximum operating depth', () => {
         it('Should calculate MOD metric', () => {
             const nx = new NitroxLabCore();
-
-            // tuple [pO2, ppO2Max, MOD]
+            // [pO2, ppO2Max, MOD]
             const modCasesMetric: [number, number, number][] = [
                 [0.32, 1.4, 33.75],
                 [0.36, 1.4, 28.88]
@@ -40,16 +39,14 @@ describe('Calculations', () => {
         });
         it('Should throw on incorrect fO2 range', () => {
             const nx = new NitroxLabCore();
-
             const eanValues = [0, -32, -321, -0];
             eanValues.forEach(fO2 => {
-                assert.throws(() => nx.calcMOD(fO2, 1.4), 'Incorrect fO2 range');
+                assert.throws(() => nx.calcMOD(fO2, 1.4), 'Incorrect fO2');
             });
         });
         it('Should throw on incorrect ppO2Max range', () => {
             const nx = new NitroxLabCore();
-
-            const ppO2MaxValues = [0, 0.3, 0.453, -3, -0, -0.12, null, undefined];
+            const ppO2MaxValues = [0, -3, -0, -0.12, null, undefined];
             ppO2MaxValues.forEach(ppO2Max => {
                 assert.throws(() => nx.calcMOD(32, ppO2Max as number), 'Incorrect ppO2Max');
             });
@@ -59,9 +56,9 @@ describe('Calculations', () => {
     describe('Best mix', () => {
         it('Should calculate best mix metric', () => {
             const nx = new NitroxLabCore();
-
             const bestMixCasesMetric: [number, number, number][] = [
-                [33, 1.4, 0.32]
+                [33, 1.4, 0.32],
+                [3, 1.4, 1]
             ];
             bestMixCasesMetric.forEach(bestMixCase => {
                 const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
@@ -78,6 +75,13 @@ describe('Calculations', () => {
                 const [caseDepth, casePPO2Max, caseBestMix] = bestMixCase;
                 const bestMix = nx.calcBestMix(caseDepth, casePPO2Max);
                 assert.strictEqual(bestMix, caseBestMix);
+            });
+        });
+        it('Should throw on incorrect depth range', () => {
+            const nx = new NitroxLabCore();
+            const incorrectDepths = [-42, -1, 0];
+            incorrectDepths.forEach((depth) => {
+                assert.throws(() => nx.calcBestMix(depth, 1.4), 'Incorrect depth');
             });
         });
     });
