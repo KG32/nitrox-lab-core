@@ -3,18 +3,18 @@ export enum Units {
     IMPERIAL = 'imperial'
 }
 
-interface TopOffOptions {
+export interface TopOffOptions {
     currentMix: { fO2: number, p: number };
     topOffMix: { fO2: number };
     targetPressure: number;
 }
 
-interface CoreOptions {
+export interface CoreOptions {
     units?: Units;
     defaultPpO2Max?: number;
 }
 
-enum InputType {
+export enum InputType {
     DEPTH,
     PPO2MAX,
     FO2
